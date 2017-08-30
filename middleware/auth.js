@@ -1,3 +1,5 @@
+'use strict'
+
 const config = require('../config.json')
 const User = require('../schema/user')
 const log = require('winston')

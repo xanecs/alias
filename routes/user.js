@@ -1,3 +1,5 @@
+'use strict'
+
 const User = require('../schema/user')
 const Boom = require('boom')
 

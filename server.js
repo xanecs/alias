@@ -1,3 +1,5 @@
+'use strict'
+
 const hapi = require('hapi')
 const http2 = require('http2')
 const fs = require('fs')
