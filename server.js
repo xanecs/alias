@@ -10,6 +10,7 @@ const log = require('winston')
 const config = require('./config.json')
 log.level = 'verbose'
 
+mongoose.Promise = global.Promise
 mongoose.connect(config.db, {useMongoClient: true}, (err) => {
   if (err) throw err
   log.info(`Database connection established to ${config.db}`)
