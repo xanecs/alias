@@ -21,7 +21,6 @@ async function getUser (username, password) {
   const user = await User.findOne({username})
   if (!user) return null
   if (await user.validatePassword(password)) {
-    delete user.passwordHash
     return user
   }
   return null

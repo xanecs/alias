@@ -12,10 +12,7 @@ async function getUsers (request, reply) {
     q.displayName = request.query.displayName
   }
 
-  reply((await User.find(q)).map(user => {
-    delete user.passwordHash
-    return user
-  }))
+  reply(await User.find(q))
 }
 
 async function getUser (request, reply) {
@@ -24,7 +21,6 @@ async function getUser (request, reply) {
   if (!user) {
     return reply(Boom.notFound(`User ${q.username} not found`))
   }
-  delete user.passwordHash
   reply(user)
 }
 
@@ -35,7 +31,6 @@ async function getMe (request, reply) {
 async function createUser (request, reply) {
   const newUser = new User(request.payload)
   const user = await newUser.save()
-  delete user.passwordHash
   reply(user)
 }
 
