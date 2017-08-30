@@ -34,6 +34,26 @@ async function createUser (request, reply) {
   reply(user)
 }
 
+async function updateUser (request, reply) {
+  const q = {username: request.params.username}
+  const user = await User.findOne(q)
+  if (!user) {
+    return reply(Boom.notFound(`User ${q.username} not found`))
+  }
+
+  Object.assign(user, request.payload)
+  reply(await user.save())
+}
+
+async function updateMe (request, reply) {
+  const user = request.auth.credentials
+  if (!user.isAdmin && request.payload.isAdmin) {
+    return reply(Boom.badRequest('You cannot make yourself an admin'))
+  }
+  Object.assign(user, request.payload)
+  reply(await user.save())
+}
+
 module.exports = [
   {
     method: 'GET',
@@ -58,5 +78,17 @@ module.exports = [
     path: '/users',
     config: {auth: 'admin'},
     handler: createUser
+  },
+  {
+    method: 'PUT',
+    path: '/users/{username}',
+    config: {auth: 'admin'},
+    handler: updateUser
+  },
+  {
+    method: 'PUT',
+    path: '/users/me',
+    config: {auth: 'user'},
+    handler: updateMe
   }
 ]
