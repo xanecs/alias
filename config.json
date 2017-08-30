@@ -1,0 +1,13 @@
+{
+  "tls": {
+    "cert": "./tls/server.crt",
+    "key": "./tls/server.key",
+    "ca": "./tls/ca.crt"
+  },
+  "host": "::",
+  "port": 3000,
+  "db": "mongodb://localhost/rockdove",
+  "auth": {
+    "smtpSecret": "banana"
+  }
+}

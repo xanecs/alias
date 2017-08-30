@@ -1,0 +1,20 @@
+{
+  "name": "rockdove-alias",
+  "version": "0.0.1",
+  "description": "Manage addresses (aliases) for the Rockdove mail system",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Leon Bentrup <leon@leonadi.de>",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "boom": "^5.2.0",
+    "hapi": "^16.5.2",
+    "hapi-auth-basic": "^4.2.0",
+    "http2": "^3.3.6",
+    "mongoose": "^4.11.9",
+    "winston": "^2.3.1"
+  }
+}
