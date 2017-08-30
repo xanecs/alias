@@ -1,5 +1,5 @@
 {
-  "name": "rockdove-alias",
+  "name": "zebradove-alias",
   "version": "0.0.1",
   "description": "Manage addresses (aliases) for the Rockdove mail system",
   "main": "server.js",
@@ -8,6 +8,7 @@
   },
   "author": "Leon Bentrup <leon@leonadi.de>",
   "license": "ISC",
+  "repository": "zebradove/alias",
   "dependencies": {
     "bcrypt": "^1.0.3",
     "boom": "^5.2.0",
