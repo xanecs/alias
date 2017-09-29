@@ -38,6 +38,7 @@ server.register([
 })
 
 server.route(require('./routes/user'))
+server.route(require('./routes/alias'))
 
 server.start((err) => {
   if (err) throw err
