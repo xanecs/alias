@@ -18,7 +18,7 @@ function validateSmtp (request, username, password, cb) {
 }
 
 async function getUser (username, password) {
-  const user = await User.findOne({username})
+  const user = await User.findOne({username: username.toLowerCase()})
   if (!user) return null
   if (await user.validatePassword(password)) {
     return user

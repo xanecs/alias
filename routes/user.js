@@ -6,7 +6,7 @@ const Boom = require('boom')
 async function getUsers (request, reply) {
   let q = {}
   if (request.query.username) {
-    q.username = request.query.name
+    q.username = request.query.username.toLowerCase()
   }
   if (request.query.displayName) {
     q.displayName = request.query.displayName
@@ -16,7 +16,7 @@ async function getUsers (request, reply) {
 }
 
 async function getUser (request, reply) {
-  const q = {username: request.params.username}
+  const q = {username: request.params.username.toLowerCase()}
   const user = await User.findOne(q)
   if (!user) {
     return reply(Boom.notFound(`User ${q.username} not found`))
@@ -35,7 +35,7 @@ async function createUser (request, reply) {
 }
 
 async function updateUser (request, reply) {
-  const q = {username: request.params.username}
+  const q = {username: request.params.username.toLowerCase()}
   const user = await User.findOne(q)
   if (!user) {
     return reply(Boom.notFound(`User ${q.username} not found`))
