@@ -3,10 +3,10 @@
 const mongoose = require('mongoose')
 
 const aliasSchema = new mongoose.Schema({
-  name: {type: 'string', unique: true, lowercase: true},
-  usedfor: [{type: 'string', lowercase: true}],
-  isActive: {type: 'boolean', default: true},
-  comment: 'string',
+  name: {type: String, unique: true, lowercase: true},
+  usedfor: [{type: String, lowercase: true}],
+  isActive: {type: Boolean, default: true},
+  comment: String,
   userId: mongoose.Schema.Types.ObjectId
 })
 

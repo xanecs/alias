@@ -4,10 +4,10 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 const userSchema = new mongoose.Schema({
-  displayName: 'string',
-  username: {type: 'string', lowercase: true, unique: true},
-  passwordHash: 'string',
-  isAdmin: 'boolean'
+  displayName: String,
+  username: {type: String, lowercase: true, unique: true},
+  passwordHash: String,
+  isAdmin: Boolean
 })
 
 userSchema.set('toJSON', {
