@@ -2,11 +2,12 @@
 
 const User = require('../schema/user')
 const Boom = require('boom')
+const Joi = require('joi')
 
 async function getUsers (request, reply) {
   let q = {}
   if (request.query.username) {
-    q.username = request.query.username.toLowerCase()
+    q.username = request.query.username
   }
   if (request.query.displayName) {
     q.displayName = request.query.displayName
@@ -16,7 +17,7 @@ async function getUsers (request, reply) {
 }
 
 async function getUser (request, reply) {
-  const q = {username: request.params.username.toLowerCase()}
+  const q = {username: request.params.username}
   const user = await User.findOne(q)
   if (!user) {
     return reply(Boom.notFound(`User ${q.username} not found`))
@@ -35,7 +36,7 @@ async function createUser (request, reply) {
 }
 
 async function updateUser (request, reply) {
-  const q = {username: request.params.username.toLowerCase()}
+  const q = {username: request.params.username}
   const user = await User.findOne(q)
   if (!user) {
     return reply(Boom.notFound(`User ${q.username} not found`))
@@ -54,17 +55,39 @@ async function updateMe (request, reply) {
   reply(await user.save())
 }
 
+const userPayloadValidation = {
+  username: Joi.string().alphanum().lowercase().trim().required(),
+  displayName: Joi.string().trim().required(),
+  password: Joi.string().required(),
+  isAdmin: Joi.boolean().required()
+}
+
 module.exports = [
   {
     method: 'GET',
     path: '/users',
-    config: {auth: 'admin'},
+    config: {
+      auth: 'admin',
+      validate: {
+        query: {
+          username: Joi.string().alphanum().lowercase().trim(),
+          displayName: Joi.string()
+        }
+      }
+    },
     handler: getUsers
   },
   {
     method: 'GET',
     path: '/users/{username}',
-    config: {auth: 'admin'},
+    config: {
+      auth: 'admin',
+      validate: {
+        params: {
+          username: Joi.string().alphanum().lowercase().trim().required()
+        }
+      }
+    },
     handler: getUser
   },
   {
@@ -76,19 +99,37 @@ module.exports = [
   {
     method: 'POST',
     path: '/users',
-    config: {auth: 'admin'},
+    config: {
+      auth: 'admin',
+      validate: {
+        payload: userPayloadValidation
+      }
+    },
     handler: createUser
   },
   {
     method: 'PUT',
     path: '/users/{username}',
-    config: {auth: 'admin'},
+    config: {
+      auth: 'admin',
+      validate: {
+        params: {
+          username: Joi.string().lowercase().trim().required()
+        },
+        payload: userPayloadValidation
+      }
+    },
     handler: updateUser
   },
   {
     method: 'PUT',
     path: '/users/me',
-    config: {auth: 'user'},
+    config: {
+      auth: 'user',
+      validate: {
+        payload: userPayloadValidation
+      }
+    },
     handler: updateMe
   }
 ]
