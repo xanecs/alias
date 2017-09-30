@@ -68,6 +68,7 @@ module.exports = [
     path: '/users',
     config: {
       auth: 'admin',
+      tags: ['api'],
       validate: {
         query: {
           username: Joi.string().alphanum().lowercase().trim(),
@@ -82,6 +83,7 @@ module.exports = [
     path: '/users/{username}',
     config: {
       auth: 'admin',
+      tags: ['api'],
       validate: {
         params: {
           username: Joi.string().alphanum().lowercase().trim().required()
@@ -93,7 +95,10 @@ module.exports = [
   {
     method: 'GET',
     path: '/users/me',
-    config: {auth: 'user'},
+    config: {
+      auth: 'user',
+      tags: ['api']
+    },
     handler: getMe
   },
   {
@@ -101,6 +106,7 @@ module.exports = [
     path: '/users',
     config: {
       auth: 'admin',
+      tags: ['api'],
       validate: {
         payload: userPayloadValidation
       }
@@ -112,6 +118,7 @@ module.exports = [
     path: '/users/{username}',
     config: {
       auth: 'admin',
+      tags: ['api'],
       validate: {
         params: {
           username: Joi.string().lowercase().trim().required()
@@ -126,6 +133,7 @@ module.exports = [
     path: '/users/me',
     config: {
       auth: 'user',
+      tags: ['api'],
       validate: {
         payload: userPayloadValidation
       }

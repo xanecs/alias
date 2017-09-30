@@ -81,6 +81,7 @@ module.exports = [
     path: '/aliases',
     config: {
       auth: 'user',
+      tags: ['api'],
       validate: {
         query: {
           name: Joi.string().alphanum().lowercase().trim(),
@@ -96,6 +97,7 @@ module.exports = [
     path: '/aliases/for/{for}',
     config: {
       auth: {strategies: ['smtp', 'user']},
+      tags: ['api'],
       validate: {
         params: {
           for: Joi.string().email().lowercase().trim().required()
@@ -109,6 +111,7 @@ module.exports = [
     path: '/aliases/{name}',
     config: {
       auth: 'user',
+      tags: ['api'],
       validate: {
         params: {
           name: Joi.string().alphanum().lowercase().trim().required()
@@ -122,6 +125,7 @@ module.exports = [
     path: '/aliases',
     config: {
       auth: 'user',
+      tags: ['api'],
       validate: {
         payload: aliasPayloadValidation
       }
@@ -133,6 +137,7 @@ module.exports = [
     path: '/aliases/{name}',
     config: {
       auth: 'user',
+      tags: ['api'],
       validate: {
         payload: aliasPayloadValidation
       }
@@ -144,6 +149,7 @@ module.exports = [
     path: '/aliases/{name}/for',
     config: {
       auth: {strategies: ['smtp', 'user']},
+      tags: ['api'],
       validate: {
         params: {
           name: Joi.string().alphanum().lowercase().trim().required()
