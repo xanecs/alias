@@ -139,7 +139,10 @@ module.exports = [
       auth: 'user',
       tags: ['api'],
       validate: {
-        payload: aliasPayloadValidation
+        payload: aliasPayloadValidation,
+        params: {
+          name: Joi.string().alphanum().lowercase().trim().required()
+        }
       }
     },
     handler: updateAlias
