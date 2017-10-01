@@ -9,5 +9,9 @@
   "db": "mongodb://localhost/rockdove",
   "auth": {
     "smtpSecret": "banana"
-  }
+  },
+  "domains": [
+    "xanecs.me",
+    "leonadi.de"
+  ]
 }

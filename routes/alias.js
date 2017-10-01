@@ -1,8 +1,10 @@
 'use strict'
 
 const Alias = require('../schema/alias')
+const User = require('../schema/user')
 const Boom = require('boom')
 const Joi = require('joi')
+const config = require('../config.json')
 
 async function getAliases (request, reply) {
   let q = {userId: request.auth.credentials._id}
@@ -20,12 +22,30 @@ async function getAliases (request, reply) {
 }
 
 async function getAlias (request, reply) {
-  const q = {name: request.params.name, userId: request.auth.credentials._id}
+  const q = {name: request.params.name}
+  if (request.auth.credentials.username !== 'smtp') {
+    q.userId = request.auth.credentials._id
+  }
   const alias = await Alias.findOne(q)
   if (!alias) {
     return reply(Boom.notFound(`Alias ${q.name} not found`))
   }
   reply(alias)
+}
+
+async function resolveAlias (request, reply) {
+  const q = {name: request.payload.name}
+  const alias = await Alias.findOne(q)
+  if (!alias) {
+    return reply({valid: false})
+  }
+  const user = await User.findById(alias.userId)
+  reply({valid: alias.isActive, user: user.username, host: config.domains[0]})
+  const from = request.payload.from
+  if (alias.usedfor.indexOf(from) < 0) {
+    alias.usedfor.push(from)
+    await alias.save()
+  }
 }
 
 async function getAliasFor (request, reply) {
@@ -70,7 +90,7 @@ async function updateAlias (request, reply) {
 }
 
 const aliasPayloadValidation = {
-  name: Joi.string().alphanum().lowercase().trim().required(),
+  name: Joi.string().email().lowercase().trim().required(),
   comment: Joi.string().optional(),
   usedfor: Joi.array().items(Joi.string().email().lowercase().trim())
 }
@@ -84,7 +104,7 @@ module.exports = [
       tags: ['api'],
       validate: {
         query: {
-          name: Joi.string().alphanum().lowercase().trim(),
+          name: Joi.string().email().lowercase().trim(),
           comment: Joi.string(),
           active: Joi.boolean()
         }
@@ -110,15 +130,30 @@ module.exports = [
     method: 'GET',
     path: '/aliases/{name}',
     config: {
-      auth: 'user',
+      auth: {strategies: ['smtp', 'user']},
       tags: ['api'],
       validate: {
         params: {
-          name: Joi.string().alphanum().lowercase().trim().required()
+          name: Joi.string().email().lowercase().trim().required()
         }
       }
     },
     handler: getAlias
+  },
+  {
+    method: 'POST',
+    path: '/aliases/resolve',
+    config: {
+      auth: 'smtp',
+      tags: ['api'],
+      validate: {
+        payload: {
+          name: Joi.string().email().lowercase().trim().required(),
+          from: Joi.string().email().lowercase().trim().required()
+        }
+      }
+    },
+    handler: resolveAlias
   },
   {
     method: 'POST',
@@ -141,7 +176,7 @@ module.exports = [
       validate: {
         payload: aliasPayloadValidation,
         params: {
-          name: Joi.string().alphanum().lowercase().trim().required()
+          name: Joi.string().email().lowercase().trim().required()
         }
       }
     },
@@ -155,7 +190,7 @@ module.exports = [
       tags: ['api'],
       validate: {
         params: {
-          name: Joi.string().alphanum().lowercase().trim().required()
+          name: Joi.string().email().lowercase().trim().required()
         },
         payload: {
           for: Joi.string().email().lowercase().trim().required()

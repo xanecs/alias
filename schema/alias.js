@@ -7,7 +7,7 @@ const aliasSchema = new mongoose.Schema({
   usedfor: [{type: String, lowercase: true}],
   isActive: {type: Boolean, default: true},
   comment: String,
-  userId: mongoose.Schema.Types.ObjectId
+  userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
 
 const aliasModel = mongoose.model('Alias', aliasSchema)
