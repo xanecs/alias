@@ -55,6 +55,14 @@ async function updateMe (request, reply) {
   reply(await user.save())
 }
 
+async function authenticateUser (request, reply) {
+  const user = await User.findOne({username: request.payload.username})
+  if (user && await user.validatePassword(request.payload.password)) {
+    return reply({valid: true, user})
+  }
+  return reply({valid: false})
+}
+
 const userPayloadValidation = {
   username: Joi.string().alphanum().lowercase().trim().required(),
   displayName: Joi.string().trim().required(),
@@ -77,6 +85,21 @@ module.exports = [
       }
     },
     handler: getUsers
+  },
+  {
+    method: 'POST',
+    path: '/authenticate',
+    config: {
+      auth: 'smtp',
+      tags: ['api'],
+      validate: {
+        payload: {
+          username: Joi.string().alphanum().lowercase().trim(),
+          password: Joi.string().required()
+        }
+      }
+    },
+    handler: authenticateUser
   },
   {
     method: 'GET',
